@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WYREX MiniApp</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+:root {
+  --bg: #f2f4f7;
+  --card: rgba(255,255,255,0.6);
+  --text: #111;
+  --accent: #2AABEE;
+  --blur: blur(15px);
+  --neon: #2aabeeaa;
+}
+
+body.dark {
+  --bg: #0e0e11;
+  --card: rgba(30,30,35,0.5);
+  --text: #fff;
+  --neon: #2aabee55;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flags span {
+  font-size: 22px;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.flags span:hover { transform: scale(1.2); }
+
+.theme-toggle {
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-shadow: 0 0 6px var(--neon);
+}
+
+h2 {
+  margin: 20px 0;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.bot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.bot-card {
+  background: var(--card);
+  backdrop-filter: var(--blur);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25),
+              0 0 8px var(--neon);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: appear 0.6s forwards;
+}
+
+.bot-card:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35),
+              0 0 12px var(--neon);
+}
+
+.bot-card:nth-child(1) { animation-delay: 0.1s; }
+.bot-card:nth-child(2) { animation-delay: 0.2s; }
+.bot-card:nth-child(3) { animation-delay: 0.3s; }
+.bot-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes appear {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bot-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 4px var(--neon);
+}
+
+.bot-title {
+  font-size: 15px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.bot-card button {
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 6px var(--neon);
+}
+
+.bot-card button:hover { background: #1d8ad1; }
+
+.channel {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.channel a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  text-shadow: 0 0 4px var(--neon);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <div class="flags">
+      <span onclick="setLang('ru')">🇷🇺</span>
+      <span onclick="setLang('en')">🇬🇧</span>
+      <span onclick="setLang('de')">🇩🇪</span>
+    </div>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+  </div>
+
+  <h2 id="title">Выберите бота</h2>
+
+  <div class="bot-grid">
+    <div class="bot-card">
+      <div class="bot-icon">🎬</div>
+      <div class="bot-title">Video Bot</div>
+      <button onclick="openBot('video')">Открыть</button>
+    </div>
+    <div class="bot-card">
+      <div class="bot-icon">🎵</div>
+      <div class="bot-title">Music Bot</div>
+      <button onclick="openBot('music')">Открыть</button>
+    </div>
+    <div class="bot-card">
+      <div class="bot-icon">🎲</div>
+      <div class="bot-title">Random Bot</div>
+      <button onclick="openBot('random')">Открыть</button>
+    </div>
+    <div class="bot-card">
+      <div class="bot-icon">📢</div>
+      <div class="bot-title">Ads Bot</div>
+      <button onclick="openBot('ads')">Открыть</button>
+    </div>
+  </div>
+
+  <div class="channel">
+    📢 <a href="https://t.me/wytrexbot" target="_blank">@wytrexbot</a>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+if(tg.colorScheme === 'dark'){ document.body.classList.add('dark'); } else { document.body.classList.remove('dark'); }
+
+function toggleTheme(){ document.body.classList.toggle('light'); document.body.classList.toggle('dark'); }
+
+function openBot(type){
+  window.location.href = `loader.html?bot=${type}`;
+}
+
+const translations = {
+  ru: { title: "Выберите бота", open: "Открыть" },
+  en: { title: "Choose a bot", open: "Open" },
+  de: { title: "Bot auswählen", open: "Öffnen" }
+};
+
+function setLang(lang){
+  document.getElementById("title").innerText = translations[lang].title;
+  document.querySelectorAll(".bot-card button").forEach(btn=>btn.innerText = translations[lang].open);
+}
+</script>
+
+</body>
+</html>
