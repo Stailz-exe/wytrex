@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WYREX</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <div class="topbar">
+        <div class="flags">
+            <span onclick="setLang('ru')">🇷🇺</span>
+            <span onclick="setLang('en')">🇬🇧</span>
+            <span onclick="setLang('de')">🇩🇪</span>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+    </div>
+
+    <h2 id="title">Выберите бота</h2>
+
+    <div class="bot-grid">
+        <div class="bot-card" onclick="openBot('video')">
+            <div class="icon">🎬</div>
+            <div>Video Bot</div>
+        </div>
+
+        <div class="bot-card" onclick="openBot('music')">
+            <div class="icon">🎵</div>
+            <div>Music Bot</div>
+        </div>
+
+        <div class="bot-card" onclick="openBot('random')">
+            <div class="icon">🎲</div>
+            <div>Random Bot</div>
+        </div>
+
+        <div class="bot-card" onclick="openBot('ads')">
+            <div class="icon">📢</div>
+            <div>Ads Bot</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
