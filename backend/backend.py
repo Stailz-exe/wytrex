@@ -9,7 +9,7 @@ app = FastAPI()
 # Разрешаем запросы с MiniApp
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # можно ограничить домен MiniApp
+    allow_origins=["https://wytrex.onrender.com"],  # можно указать домен MiniApp
     allow_methods=["*"],
     allow_headers=["*"]
 )
@@ -27,7 +27,7 @@ async def video_info(request: Request):
     data = await request.json()
     user_id = data.get("user_id")
     url = data.get("url")
-    if not url or not user_id:
+    if not user_id or not url:
         return {"error": "user_id и url обязательны"}
 
     today = datetime.now().date()
@@ -40,7 +40,6 @@ async def video_info(request: Request):
     try:
         with yt_dlp.YoutubeDL({}) as ydl:
             info = ydl.extract_info(url, download=False)
-
         return {
             "title": info.get("title", "N/A"),
             "views": info.get("view_count", 0),
@@ -49,14 +48,11 @@ async def video_info(request: Request):
             "date": info.get("upload_date", "N/A"),
             "limit_reached": limit_reached
         }
-
     except Exception as e:
         return {"error": str(e)}
 
-
 @app.post("/download")
 async def download_video(request: Request):
-    import shutil
     data = await request.json()
     user_id = data.get("user_id")
     url = data.get("url")
@@ -64,7 +60,7 @@ async def download_video(request: Request):
     extract_description = data.get("extract_description", False)
     extract_music = data.get("extract_music", False)
 
-    if not url or not user_id:
+    if not user_id or not url:
         return {"error": "user_id и url обязательны"}
 
     today = datetime.now().date()
@@ -83,17 +79,19 @@ async def download_video(request: Request):
         }
 
         if extract_music:
-            ydl_opts.update({"format": "bestaudio", "postprocessors": [{"key": "FFmpegExtractAudio","preferredcodec": "mp3"}]})
+            ydl_opts.update({
+                "format": "bestaudio",
+                "postprocessors": [{"key": "FFmpegExtractAudio","preferredcodec": "mp3"}]
+            })
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url)
 
-        # Увеличиваем счетчик
         users_data[user_id]["count"] += 1
+        filename = ydl.prepare_filename(info)
 
-        # В реальной интеграции здесь отправляем файл ботом Telegram
-        # Пока просто возвращаем OK
-        return {"status": "OK", "filename": ydl.prepare_filename(info)}
+        # Здесь можно подключить Telegram Bot API для отправки видео
+        return {"status": "OK", "filename": filename}
 
     except Exception as e:
         return {"error": str(e)}

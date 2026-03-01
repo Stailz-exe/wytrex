@@ -1,4 +1,5 @@
-const BACKEND_URL = "http://localhost:8000"; // измените на ваш render URL
+const BACKEND_URL = "https://YOUR_RENDER_URL"; // замените на URL Render
+
 const checkBtn = document.getElementById("checkBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 const videoInfoDiv = document.getElementById("videoInfo");
