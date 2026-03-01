@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://YOUR_RENDER_URL"; // замените на URL Render
+const BACKEND_URL = "https://wytrex.onrender.com"; // замените на URL Render
 
 const checkBtn = document.getElementById("checkBtn");
 const downloadBtn = document.getElementById("downloadBtn");
