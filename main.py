@@ -2,12 +2,14 @@
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler
 import config
 
+
 from handlers.video_bot import start_video, callback_video, download_video
+
+from handlers.video_bot import start_video, callback_video
+
 from handlers.music_bot import start_music, callback_music
 from handlers.random_bot import start_random, callback_random
 from handlers.ads_bot import start_ads, callback_ads
-
-
 
 app = ApplicationBuilder().token(config.TOKEN).build()
 

@@ -10,6 +10,7 @@ const downloadBtn = document.getElementById("downloadBtn");
 const dailyLimitText = document.getElementById("dailyLimit");
 const BACKEND_URL = "https://wytrex.onrender.com";
 
+
 let videoData = null;  // объект с данными видео
 let downloadsToday = 0;
 const maxDownloads = 5;
