@@ -1,4 +1,8 @@
-const BACKEND_URL = "https://wytrex.onrender.com"; // замените на URL Render
+const BACKEND_URL = "https://wytrex.onrender.com";
+const tg = Telegram.WebApp;
+
+tg.expand();
+document.getElementById('userName').innerText = tg.initDataUnsafe.user?.first_name || 'User';
 
 const checkBtn = document.getElementById("checkBtn");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -6,11 +10,17 @@ const videoInfoDiv = document.getElementById("videoInfo");
 const formatsDiv = document.getElementById("formats");
 const premiumOptionsDiv = document.getElementById("premiumOptions");
 const buyPremiumBtn = document.getElementById("buyPremiumBtn");
+const progressDiv = document.getElementById("progress");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => document.body.classList.toggle('dark-theme'));
 
 checkBtn.addEventListener("click", async () => {
     const link = document.getElementById("videoLink").value.trim();
     if(!link) return alert("Вставьте ссылку!");
-    const userId = Telegram.WebApp.initDataUnsafe.user.id;
+    const userId = tg.initDataUnsafe.user.id;
 
     try {
         const res = await fetch(`${BACKEND_URL}/video_info`, {
@@ -39,7 +49,6 @@ checkBtn.addEventListener("click", async () => {
         } else {
             buyPremiumBtn.classList.add("hidden");
         }
-
     } catch(e){ alert("Ошибка сервера: " + e); }
 });
 
@@ -48,7 +57,11 @@ downloadBtn.addEventListener("click", async () => {
     const selectedFormat = document.querySelector('input[name="format"]:checked').value;
     const extractDescription = document.getElementById("extractDescription").checked;
     const extractMusic = document.getElementById("extractMusic").checked;
-    const userId = Telegram.WebApp.initDataUnsafe.user.id;
+    const userId = tg.initDataUnsafe.user.id;
+
+    progressDiv.classList.remove("hidden");
+    progressBar.value = 0;
+    progressText.innerText = "0%";
 
     try {
         const res = await fetch(`${BACKEND_URL}/download`, {
@@ -65,8 +78,10 @@ downloadBtn.addEventListener("click", async () => {
         const data = await res.json();
 
         if(data.status === "OK"){
+            progressBar.value = 100;
+            progressText.innerText = "100%";
             alert("✅ Видео отправлено в Telegram!");
-            Telegram.WebApp.close();
+            tg.close();
         } else if(data.error === "LIMIT_REACHED"){
             alert("Лимит 5 видео достигнут. Купите Premium!");
             downloadBtn.classList.add("hidden");
@@ -74,10 +89,7 @@ downloadBtn.addEventListener("click", async () => {
         } else {
             alert("Ошибка: " + data.error);
         }
-
     } catch(e){ alert("Ошибка сервера: " + e); }
 });
 
-buyPremiumBtn.addEventListener("click", () => {
-    Telegram.WebApp.sendData("/buy_premium");
-});
+buyPremiumBtn.addEventListener("click", () => tg.sendData("/buy_premium"));

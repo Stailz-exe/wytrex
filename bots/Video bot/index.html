@@ -9,31 +9,56 @@
 </head>
 <body>
 <div class="container">
-    <h1>🎥 Wytrex Video Bot</h1>
-    <input type="text" id="videoLink" placeholder="Вставьте ссылку на видео">
-    <button id="checkBtn">Проверить видео</button>
+    <header>
+        <h1>🎥 Wytrex Video Bot</h1>
+        <div class="profile">
+            <p>Профиль: <span id="userName"></span></p>
+        </div>
+        <div class="theme-language">
+            <select id="languageSelect">
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+            <button id="themeToggle">🌙 Тёмная тема</button>
+        </div>
+    </header>
 
-    <div id="videoInfo" class="hidden">
-        <p id="title"></p>
-        <p id="views"></p>
-        <p id="likes"></p>
-        <p id="comments"></p>
-        <p id="date"></p>
-    </div>
+    <main>
+        <input type="text" id="videoLink" placeholder="Вставьте ссылку на видео">
+        <button id="checkBtn">🔎 Проверить видео</button>
 
-    <div id="formats" class="hidden">
-        <label><input type="radio" name="format" value="480"> 480p</label>
-        <label><input type="radio" name="format" value="720" checked> 720p</label>
-        <label><input type="radio" name="format" value="1080"> 1080p</label>
-    </div>
+        <div id="videoInfo" class="hidden">
+            <p id="title"></p>
+            <p id="views"></p>
+            <p id="likes"></p>
+            <p id="comments"></p>
+            <p id="date"></p>
+        </div>
 
-    <div id="premiumOptions" class="hidden">
-        <label><input type="checkbox" id="extractDescription"> Вытащить описание</label>
-        <label><input type="checkbox" id="extractMusic"> Вытащить музыку</label>
-    </div>
+        <div id="formats" class="hidden">
+            <label><input type="radio" name="format" value="480"> 480p</label>
+            <label><input type="radio" name="format" value="720" checked> 720p</label>
+            <label><input type="radio" name="format" value="1080"> 1080p</label>
+        </div>
 
-    <button id="downloadBtn" class="hidden">⬇ Скачать</button>
-    <button id="buyPremiumBtn" class="hidden">💎 Купить Premium</button>
+        <div id="premiumOptions" class="hidden">
+            <label><input type="checkbox" id="extractDescription"> Вытащить описание</label>
+            <label><input type="checkbox" id="extractMusic"> Вытащить музыку</label>
+        </div>
+
+        <button id="downloadBtn" class="hidden">⬇ Скачать</button>
+        <button id="buyPremiumBtn" class="hidden">💎 Купить Premium</button>
+
+        <div class="channel">
+            <p>Наш канал: <a href="https://t.me/wytrexbot" target="_blank">@wytrexbot</a></p>
+        </div>
+
+        <div id="progress" class="hidden">
+            <p>Скачивание: <span id="progressText">0%</span></p>
+            <progress id="progressBar" value="0" max="100"></progress>
+        </div>
+    </main>
 </div>
 <script src="script.js"></script>
 </body>
