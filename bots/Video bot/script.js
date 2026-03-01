@@ -1,75 +1,62 @@
-const tg = window.Telegram.WebApp;
-tg.expand();
-
-const checkBtn = document.getElementById("checkLink");
-const videoInfo = document.getElementById("videoInfo");
-const formatSection = document.getElementById("formatSection");
-const optionsSection = document.getElementById("optionsSection");
-const downloadSection = document.getElementById("downloadSection");
+const BACKEND_URL = "https://video-bot-backend.onrender.com"; // URL вашего backend
+const checkBtn = document.getElementById("checkBtn");
 const downloadBtn = document.getElementById("downloadBtn");
-const dailyLimitText = document.getElementById("dailyLimit");
-const BACKEND_URL = "https://wytrex.onrender.com";
+const videoInfoDiv = document.getElementById("videoInfo");
+const formatsDiv = document.getElementById("formats");
+const premiumOptionsDiv = document.getElementById("premiumOptions");
+const buyPremiumBtn = document.getElementById("buyPremiumBtn");
 
-
-let videoData = null;  // объект с данными видео
-let downloadsToday = 0;
-const maxDownloads = 5;
-
-// Обработчик проверки ссылки
 checkBtn.addEventListener("click", async () => {
-    const link = document.getElementById("videoLink").value.trim();
-    if(!link) return alert("Введите ссылку!");
-
-    // Здесь можно сделать fetch на backend для получения данных видео
-    // Пока тестовый пример:
-    videoData = {
-        title: "Пример видео",
-        date: "2026-03-01",
-        views: 12345,
-        likes: 678,
-        comments: 90,
-        formats: ["480", "720", "1080"]
-    }
-
-    // Показываем данные
-    document.getElementById("title").innerText = videoData.title;
-    document.getElementById("date").innerText = videoData.date;
-    document.getElementById("views").innerText = videoData.views;
-    document.getElementById("likes").innerText = videoData.likes;
-    document.getElementById("comments").innerText = videoData.comments;
-
-    videoInfo.classList.remove("hidden");
-
-    // Форматы
-    const formatsDiv = document.querySelector(".formats");
-    formatsDiv.innerHTML = "";
-    videoData.formats.forEach(f => {
-        formatsDiv.innerHTML += `<label><input type="radio" name="format" value="${f}"> ${f}p</label>`;
-    });
-
-    formatSection.classList.remove("hidden");
-    optionsSection.classList.remove("hidden");
-    downloadSection.classList.remove("hidden");
-
-    // Обновляем лимит
-    dailyLimitText.innerText = `Вы можете скачать ${maxDownloads - downloadsToday} видео сегодня.`;
+    const link = document.getElementById("videoLink").value;
+    if(!link) return alert("Вставьте ссылку!");
+    try {
+        const userId = tg.initDataUnsafe.user.id;
+        const res = await fetch(`${BACKEND_URL}/video_info`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId, url: link })
+        });
+        const data = await res.json();
+        if(data.error) { alert(data.error); return; }
+        videoInfoDiv.classList.remove("hidden");
+        formatsDiv.classList.remove("hidden");
+        premiumOptionsDiv.classList.remove("hidden");
+        downloadBtn.classList.remove("hidden");
+        document.getElementById("title").innerText = `Название видео: ${data.title}`;
+        document.getElementById("views").innerText = `Просмотры: ${data.views}`;
+        document.getElementById("likes").innerText = `Лайки: ${data.likes}`;
+        document.getElementById("comments").innerText = `Комментарии: ${data.comments}`;
+        document.getElementById("date").innerText = `Дата: ${data.date}`;
+        if(data.limit_reached){
+            downloadBtn.classList.add("hidden");
+            buyPremiumBtn.classList.remove("hidden");
+        } else { buyPremiumBtn.classList.add("hidden"); }
+    } catch(e){ alert("Ошибка сервера: " + e); }
 });
 
-// Обработчик кнопки скачать
-downloadBtn.addEventListener("click", () => {
-    if(downloadsToday >= maxDownloads){
-        return alert("Вы достигли лимита 5 видео в сутки. Приобретите Premium.");
-    }
-
-    const selectedFormat = document.querySelector('input[name="format"]:checked');
-    if(!selectedFormat) return alert("Выберите формат!");
-
-    const desc = document.getElementById("desc").checked;
-    const music = document.getElementById("music").checked;
-
-    downloadsToday++;
-
-    alert(`Скачиваем видео: ${videoData.title}\nФормат: ${selectedFormat.value}p\nОписание: ${desc}\nМузыка: ${music ? 'Да (Premium)' : 'Нет'}`);
-
-    dailyLimitText.innerText = `Вы можете скачать ${maxDownloads - downloadsToday} видео сегодня.`;
+downloadBtn.addEventListener("click", async () => {
+    const link = document.getElementById("videoLink").value;
+    const selectedFormat = document.querySelector('input[name="format"]:checked').value;
+    const extractDescription = document.getElementById("extractDescription").checked;
+    const extractMusic = document.getElementById("extractMusic").checked;
+    const userId = tg.initDataUnsafe.user.id;
+    try {
+        const res = await fetch(`${BACKEND_URL}/download`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: userId,
+                url: link,
+                format: selectedFormat,
+                extract_description: extractDescription,
+                extract_music: extractMusic
+            })
+        });
+        const data = await res.json();
+        if(data.status === "OK"){ alert("✅ Видео отправлено в Telegram!"); tg.close(); }
+        else if(data.error === "LIMIT_REACHED"){ alert("Лимит 5 видео достигнут. Купите Premium!"); downloadBtn.classList.add("hidden"); buyPremiumBtn.classList.remove("hidden"); }
+        else{ alert("Ошибка: " + data.error); }
+    } catch(e){ alert("Ошибка сервера: " + e); }
 });
+
+buyPremiumBtn.addEventListener("click", () => { tg.sendData("/buy_premium"); });

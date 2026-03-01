@@ -3,61 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Bot MiniApp</title>
+<title>Wytrex Video Bot</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-
 <div class="container">
-
-  <h2>📹 Video Bot Downloader</h2>
-
-  <!-- Вставка ссылки -->
-  <div class="input-group">
+    <h1>🎥 Wytrex Video Bot</h1>
     <input type="text" id="videoLink" placeholder="Вставьте ссылку на видео">
-    <button id="checkLink">Проверить</button>
-  </div>
-
-  <!-- Информация о видео -->
-  <div id="videoInfo" class="hidden">
-    <p><strong>Название:</strong> <span id="title"></span></p>
-    <p><strong>Дата выпуска:</strong> <span id="date"></span></p>
-    <p><strong>Просмотры:</strong> <span id="views"></span></p>
-    <p><strong>Лайки:</strong> <span id="likes"></span></p>
-    <p><strong>Комментарии:</strong> <span id="comments"></span></p>
-  </div>
-
-  <!-- Выбор формата -->
-  <div id="formatSection" class="hidden">
-    <h3>Выберите формат</h3>
-    <div class="formats">
-      <label><input type="radio" name="format" value="480"> 480p</label>
-      <label><input type="radio" name="format" value="720"> 720p</label>
-      <label><input type="radio" name="format" value="1080"> 1080p</label>
+    <button id="checkBtn">Проверить видео</button>
+    <div id="videoInfo" class="hidden">
+        <p id="title"></p>
+        <p id="views"></p>
+        <p id="likes"></p>
+        <p id="comments"></p>
+        <p id="date"></p>
     </div>
-  </div>
-
-  <!-- Опции (галочки) -->
-  <div id="optionsSection" class="hidden">
-    <h3>Дополнительно</h3>
-    <label><input type="checkbox" id="desc"> Вытянуть описание</label><br>
-    <label><input type="checkbox" id="music"> Вытянуть музыку (Premium)</label>
-  </div>
-
-  <!-- Кнопка скачать -->
-  <div id="downloadSection" class="hidden">
-    <button id="downloadBtn">⬇ Скачать</button>
-    <p id="dailyLimit" class="info"></p>
-  </div>
-
-  <!-- Premium -->
-  <div id="premiumSection">
-    <p>💎 Для расширенных функций: <a href="https://your-premium-site.com" target="_blank">Приобрести Premium</a></p>
-  </div>
-
+    <div id="formats" class="hidden">
+        <label><input type="radio" name="format" value="480"> 480p</label>
+        <label><input type="radio" name="format" value="720" checked> 720p</label>
+        <label><input type="radio" name="format" value="1080"> 1080p</label>
+    </div>
+    <div id="premiumOptions" class="hidden">
+        <label><input type="checkbox" id="extractDescription"> Вытащить описание</label>
+        <label><input type="checkbox" id="extractMusic"> Вытащить музыку</label>
+    </div>
+    <button id="downloadBtn" class="hidden">⬇ Скачать</button>
+    <button id="buyPremiumBtn" class="hidden">💎 Купить Premium</button>
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>
