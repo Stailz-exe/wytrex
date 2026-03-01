@@ -1,6 +1,9 @@
 # backend/config.py
 
 import os
+from dotenv import load_dotenv
+load_dotenv() 
+
 
 # Конфиги каждого бота
 BOTS_CONFIG = {

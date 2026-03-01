@@ -1,5 +1,7 @@
 fastapi
 uvicorn
 yt-dlp
+python-telegram-bot==20.5
 requests
 python-multipart
+python-dotenv
