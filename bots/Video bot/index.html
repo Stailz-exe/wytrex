@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wytrex Video Bot</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>🎥 Wytrex Video Bot</h1>
     <input type="text" id="videoLink" placeholder="Вставьте ссылку на видео">
     <button id="checkBtn">Проверить видео</button>
+
     <div id="videoInfo" class="hidden">
         <p id="title"></p>
         <p id="views"></p>
@@ -18,15 +20,18 @@
         <p id="comments"></p>
         <p id="date"></p>
     </div>
+
     <div id="formats" class="hidden">
         <label><input type="radio" name="format" value="480"> 480p</label>
         <label><input type="radio" name="format" value="720" checked> 720p</label>
         <label><input type="radio" name="format" value="1080"> 1080p</label>
     </div>
+
     <div id="premiumOptions" class="hidden">
         <label><input type="checkbox" id="extractDescription"> Вытащить описание</label>
         <label><input type="checkbox" id="extractMusic"> Вытащить музыку</label>
     </div>
+
     <button id="downloadBtn" class="hidden">⬇ Скачать</button>
     <button id="buyPremiumBtn" class="hidden">💎 Купить Premium</button>
 </div>
